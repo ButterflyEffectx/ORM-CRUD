@@ -1,4 +1,5 @@
 import React from 'react'
+import { Link } from '@inertiajs/react'
 
 function Nav() {
   return (
@@ -15,12 +16,12 @@ function Nav() {
                         className=' border-none bg-slate-100 rounded-lg text-xl'/>
                         <button className='text-white  bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-xl px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800'>Search</button>
                     </div>
-                    <ul className='flex items-center space-x-6 text-xl font-bold '>
-                        <li className='cursor-pointer bg-gradient-to-r from-cyan-300 to-cyan-400 p-4 rounded-3xl shadow-md'>Dashboard</li>
-                        <li className='cursor-pointer'>Roombook</li>
+                    <ul className='flex items-center text-xl font-bold '>
+                        <li className='cursor-pointer hover:bg-gradient-to-r hover:from-cyan-300 hover:to-cyan-400 p-4 rounded-3xl hover:shadow-md'>Dashboard</li>
+                        <li className='cursor-pointer hover:bg-gradient-to-r hover:from-cyan-300 hover:to-cyan-400 p-4 rounded-3xl hover:shadow-md'><a href="booking-create" target='blank'>Roombook</a></li>
                         <img src="https://plus.unsplash.com/premium_photo-1689568126014-06fea9d5d341?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
                          alt=""
-                         className="w-14 h-14 object-cover object-center rounded-lg"
+                         className="ml-4 w-14 h-14 object-cover object-center rounded-lg"
                         />
                     </ul>
                 </div>

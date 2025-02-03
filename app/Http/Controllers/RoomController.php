@@ -17,7 +17,7 @@ class RoomController extends Controller
 {
     public function index(Request $request)
     {
-        $query = $request->input('selectedMonth');
+        $query = $request->input('search');
         $booking = DB::table('bookings')->get();
         $bookings = Booking::select(
             'bookings.id as booking_id',
@@ -30,7 +30,11 @@ class RoomController extends Controller
             ->join('rooms', 'bookings.room_id', '=', 'rooms.id')
             ->join('room_types', 'rooms.room_type_id', '=', 'room_types.id')
             ->join('customers', 'bookings.customer_id', '=', 'customers.id')
-            ->orderBy('bookings.id')
+            ->where(function ($q) use ($query) {
+                $q->where('customers.name', 'like', '%' . $query . '%')
+                    ->orWhere('rooms.room_number', 'like', '%' . $query . '%');
+            })
+            ->orderBy('bookings.id', 'desc')
             ->paginate(10); // ใช้ paginate(10) เพื่อจำกัดแค่ 10 รายการต่อหน้า
 
         $bookings->getCollection()->map(function ($booking) {
@@ -63,10 +67,10 @@ class RoomController extends Controller
             ->get()
             ->count();
         return Inertia::render('Rooms/Index', [
+            'query' => $query,
             'booking' => $booking,
             'countbook' => $monthlybooking,
             'totalAmount' => $totalAmount,
-            'query' => $query,
             'month' => $month,
             'customerCount' => $CustomerCount,
             'bookings' => $bookings,
@@ -101,6 +105,7 @@ class RoomController extends Controller
 
     public function store(Request $request)
     {
+
         $request->validate([
             'customer_name' => 'required|string',
             'customer_email' => 'required|email|unique:customers,email',
@@ -172,8 +177,16 @@ class RoomController extends Controller
 
     public function destroy($id)
     {
-        Booking::destroy($id);
-        return redirect()->route('hotel.index')->with('success', 'Booking delete successfully.');
+
+        $booking = Booking::find($id);
+        if ($booking) {
+            Room::where('id', $booking->room_id)->update(['is_available' => 1]);
+
+
+            $booking->delete();
+            return redirect()->route('hotel.index')->with('success', 'Booking delete successfully.');
+        }
+        return redirect()->route('hotel.index')->with('error', 'Booking not found.');
     }
     public function edit(Request $request, $id)
     {

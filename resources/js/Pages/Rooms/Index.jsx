@@ -1,9 +1,11 @@
-import React from 'react';
+import React , { useState } from 'react';
 import Nav from '@/Components/Nav';
 import { Bar } from "react-chartjs-2";
 import "chart.js/auto";
 import moment from "moment";
 import { Inertia } from "@inertiajs/inertia";
+import { router } from '@inertiajs/react';
+import { Search } from 'lucide-react';
 
 const DashboardCard = ({ title, value, percentage, description, color }) => {
     return (
@@ -84,11 +86,17 @@ function WeeklyBookingsChart({ booking }) {
     );
 };
 
-function Index({ booking, countbook, totalAmount, customerCount, bookings, currentPage, lastPage }) {
+function Index({ booking, countbook, totalAmount, customerCount, bookings, currentPage, lastPage, query = '' }) {
+
+    const [search, setSearch] = useState(query);
     const handlePageChange = (url) => {
         if (url) {
             Inertia.get(url); // ใช้ Inertia โหลดเฉพาะข้อมูลใหม่
         }
+    };
+    const handleSearch = (e) => {
+        e.preventDefault();
+        router.get('hotel', { search });
     };
     const data = [
         {
@@ -144,7 +152,25 @@ function Index({ booking, countbook, totalAmount, customerCount, bookings, curre
                         </div>
 
                         <h1 className="mt-10 text-2xl font-bold mb-4">Booking List</h1>
-                        <table className="min-w-full bg-white rounded-lg shadow-md">
+                        <form onSubmit={handleSearch} className="flex gap-2">
+                            <div className="relative flex-1">
+                                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                                <input
+                                    type="text"
+                                    value={search}
+                                    onChange={(e) => setSearch(e.target.value)}
+                                    className="w-full pl-10 pr-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                    placeholder="Search employees..."
+                                />
+                            </div>
+                            <button
+                                type="submit"
+                                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200"
+                            >
+                                Search
+                            </button>
+                        </form>
+                        <table className="min-w-full bg-white rounded-lg shadow-md mt-5">
                             <thead>
                                 <tr className="bg-gray-200 text-left">
                                     <th className="px-6 py-3">Room Number</th>

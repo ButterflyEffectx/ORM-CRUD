@@ -12,7 +12,7 @@ class RoomFactory extends Factory
         return [
             'room_type_id' => $this->faker->randomElement([1, 2, 3]),
             'room_number' => $this->faker->unique()->numberBetween(100, 999),
-            'is_available' => true,
+            'is_available' => $this->faker->boolean,
         ];
     }
 }
